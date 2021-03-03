@@ -16,15 +16,13 @@ volumes:
 services:
 
   cli: # cli container, will be used for executing composer and any local commands (drush, drupal, etc.)
-    # To be changed when govcms9lagoon images become available.
-    image: govcms8lagoon/govcms8:edge-9.x
+    image: ${DOCKERHUB_NAMESPACE:-govcms}/${GOVCMS_CLI_IMAGE_NAME:-govcms}:${GOVCMS_IMAGE_TAG:-latest}
     << : *default-volumes # loads the defined volumes from the top
     environment:
       << : *default-environment
 
   test:
-    # To be changed when govcms9lagoon images become available.
-    image: govcms8lagoon/test:edge-9.x
+    image: ${DOCKERHUB_NAMESPACE:-govcms}/${GOVCMS_IMAGE_TEST_IMAGE_NAME:-test}:${GOVCMS_IMAGE_TAG:-latest}
     << : *default-volumes
     depends_on:
       - cli
@@ -32,8 +30,7 @@ services:
       << : *default-environment
 
   nginx:
-    # To be changed when govcms9lagoon images become available.
-    image: govcms8lagoon/nginx-drupal:edge-9.x
+    image: ${DOCKERHUB_NAMESPACE:-govcms}/nginx-drupal:${GOVCMS_IMAGE_TAG:-latest}
     << : *default-volumes
     environment:
       << : *default-environment
@@ -42,30 +39,27 @@ services:
       - default
 
   php:
-    # To be changed when govcms9lagoon images become available.
-    image: govcms8lagoon/php:edge-9.x
+    image: ${DOCKERHUB_NAMESPACE:-govcms}/php:${GOVCMS_IMAGE_TAG:-latest}
     << : *default-volumes
     environment:
       << : *default-environment
 
   mariadb:
-    # To be changed when govcms9lagoon images become available.
-    image: govcms8lagoon/mariadb-drupal:edge-9.x
+    image: ${DOCKERHUB_NAMESPACE:-govcms}/mariadb-drupal:${GOVCMS_IMAGE_TAG:-latest}
     ports:
       - "3306" # Find port on host with `docker-compose port mariadb 3306`
     environment:
       << : *default-environment
 
   solr:
-    # To be changed when govcms9lagoon images become available.
-    image: govcms8lagoon/solr:edge-9.x
+    image: ${DOCKERHUB_NAMESPACE:-govcms}/solr:${GOVCMS_IMAGE_TAG:-latest}
     ports:
       - "8983" # Find port on host with `docker-compose port solr 8983`
     environment:
       << : *default-environment
 
   chrome:
-    image: selenium/standalone-chrome
+    image: ${DOCKERHUB_NAMESPACE:-govcms}/chrome:${GOVCMS_IMAGE_TAG:-latest}
     shm_size: '1gb'
     depends_on:
       - test
